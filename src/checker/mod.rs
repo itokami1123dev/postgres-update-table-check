@@ -16,7 +16,6 @@ pub fn exec(conf:PostgresConf){
   let mut map: HashMap<String, String> = HashMap::new();
   let mut begin_time = Instant::now();
   loop {
-    let end_time = Instant::now();
     println!("\n");
     
     let con_url = format!(
@@ -83,9 +82,10 @@ pub fn exec(conf:PostgresConf){
               select_query.push_str(" OR ");
             }
             let tmp: String = row_x.get(0);
+            let end_time = Instant::now();
             select_query.push_str(
               format!(
-                " {}  > (NOW() - INTERVAL '{} seconds')::TIMESTAMP ",
+                " {}  >= (NOW() - INTERVAL '{} seconds')::TIMESTAMP ",
                 tmp,
                 (end_time - begin_time).as_secs()
               )
